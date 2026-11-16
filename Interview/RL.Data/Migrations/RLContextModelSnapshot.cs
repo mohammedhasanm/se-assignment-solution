@@ -55,6 +55,17 @@ namespace RL.Data.Migrations
                     b.ToTable("PlanProcedures");
                 });
 
+            modelBuilder.Entity("RL.Data.DataModels.PlanProcedureUser", b =>
+                {
+                    b.Property<int>("PlanId").HasColumnType("INTEGER");
+                    b.Property<int>("ProcedureId").HasColumnType("INTEGER");
+                    b.Property<int>("UserId").HasColumnType("INTEGER");
+
+                    b.HasKey("PlanId", "ProcedureId", "UserId");
+                    b.HasIndex("UserId");
+                    b.ToTable("PlanProcedureUsers");
+                });
+
             modelBuilder.Entity("RL.Data.DataModels.Procedure", b =>
                 {
                     b.Property<int>("ProcedureId")
@@ -844,6 +855,21 @@ namespace RL.Data.Migrations
                     b.Navigation("Plan");
 
                     b.Navigation("Procedure");
+                });
+
+            modelBuilder.Entity("RL.Data.DataModels.PlanProcedureUser", b =>
+                {
+                    b.HasOne("RL.Data.DataModels.PlanProcedure", null)
+                        .WithMany()
+                        .HasForeignKey("PlanId", "ProcedureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RL.Data.DataModels.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("RL.Data.DataModels.Plan", b =>

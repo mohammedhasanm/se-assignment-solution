@@ -9,6 +9,7 @@ public class RLContext : DbContext
     public DbSet<PlanProcedure> PlanProcedures { get; set; }
     public DbSet<Procedure> Procedures { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<PlanProcedureUser> PlanProcedureUsers { get; set; }
 
     public RLContext() { }
     public RLContext(DbContextOptions<RLContext> options) : base(options) { }
@@ -22,6 +23,13 @@ public class RLContext : DbContext
             typeBuilder.HasKey(pp => new { pp.PlanId, pp.ProcedureId });
             typeBuilder.HasOne(pp => pp.Plan).WithMany(p => p.PlanProcedures);
             typeBuilder.HasOne(pp => pp.Procedure).WithMany();
+        });
+
+        builder.Entity<PlanProcedureUser>(assignment =>
+        {
+            assignment.HasKey(a => new { a.PlanId, a.ProcedureId, a.UserId });
+            assignment.HasOne<PlanProcedure>().WithMany().HasForeignKey(a => new { a.PlanId, a.ProcedureId });
+            assignment.HasOne<User>().WithMany().HasForeignKey(a => a.UserId);
         });
 
         //Add procedure Seed Data

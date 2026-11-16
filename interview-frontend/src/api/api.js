@@ -65,3 +65,21 @@ export const getUsers = async () => {
 
     return await response.json();
 };
+
+export const getPlanAssignments = async (planId) => {
+    const response = await fetch(`${api_url}/PlanProcedure/${planId}/assignments`);
+
+    if (!response.ok) throw new Error("Failed to load assigned users");
+
+    return response.json();
+};
+
+export const savePlanProcedureAssignments = async (planId, procedureId, userIds) => {
+    const response = await fetch(`${api_url}/PlanProcedure/${planId}/${procedureId}/assignments`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userIds),
+    });
+
+    if (!response.ok) throw new Error("Failed to save assigned users. Please try again.");
+};

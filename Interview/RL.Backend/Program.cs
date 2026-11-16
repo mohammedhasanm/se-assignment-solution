@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.OData;
+using Microsoft.EntityFrameworkCore;
 using RL.Data;
 using MediatR;
 
@@ -28,6 +29,11 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    await scope.ServiceProvider.GetRequiredService<RLContext>().Database.MigrateAsync();
+}
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
